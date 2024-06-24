@@ -1,6 +1,6 @@
-from data_generator import execute_query, DBsPaths
+from data_generator import execute_query, DBsPaths, DB_DIR_PATH
 
-DB_NAME = '..\Databases\query_3_results.db'
+DB_NAME = f'{DB_DIR_PATH}/query_3_results.db'
 
 SPANS = (('0000', '0359'), ('0400', '0759'), ('0800', '1159'),
          ('1200', '1559'), ('1600', '1959'), ('2000', '2359'))

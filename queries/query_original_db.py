@@ -1,7 +1,7 @@
 
-from data_generator import execute_query, DBsPaths
+from data_generator import execute_query, DBsPaths, DB_DIR_PATH
 
-DB_NAME = '..\Databases\original_sample.db'
+DB_NAME = f'{DB_DIR_PATH}/original_sample.db'
 
 query_airports = f"""
 SELECT *

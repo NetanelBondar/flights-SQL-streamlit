@@ -1,6 +1,6 @@
-from data_generator import execute_query, DBsPaths
+from data_generator import execute_query, DBsPaths, DB_DIR_PATH
 
-DB_NAME = '..\Databases\query_4_results.db'
+DB_NAME = f'{DB_DIR_PATH}/query_4_results.db'
 
 MONTHS = dict(zip(
     range(1, 13),
