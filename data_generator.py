@@ -1,9 +1,16 @@
 
 import duckdb
 import sqlite3
+import os
+
+DB_DIR_PATH = '../Databases'
 
 class DBsPaths:
-    """paths to the 4 databases"""
+    """
+    paths to the 4 databases.
+    assumes the `Airlines_Airports_Cancellation_Codes_Flights` folder exists
+    in the same directory
+    """
     AIRLINES = 'Airlines_Airports_Cancellation_Codes_Flights/airlines.csv'
     AIRPORTS = 'Airlines_Airports_Cancellation_Codes_Flights/airports.csv'
     CANCELLATION_CODES = 'Airlines_Airports_Cancellation_Codes_Flights/cancellation_codes.csv'
@@ -17,6 +24,10 @@ def execute_query(db_name: str, table_name: str, query: str):
     :param table_name: name of the new table
     :param query: the query to execute
     """
+
+    if not os.path.exists(DB_DIR_PATH):
+        os.makedirs(DB_DIR_PATH)
+
     sqlite_conn = sqlite3.connect(db_name)
     sqlite_cursor = sqlite_conn.cursor()
 
