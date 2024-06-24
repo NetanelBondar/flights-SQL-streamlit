@@ -9,48 +9,41 @@ class DBsPaths:
     CANCELLATION_CODES = 'Airlines_Airports_Cancellation_Codes_Flights/cancellation_codes.csv'
     FLIGHTS = 'Airlines_Airports_Cancellation_Codes_Flights/flights.csv'
 
-class DataGenerator:
+def execute_query(db_name: str, table_name: str, query: str):
     """
-    creates a new db if it's not exists.\n
-    then, can execute queries on the 4 csv files and save the results as tables
-    in the db.
+    create a new db if it doesn't exist.\n
+    queries the database and saves the airports_cancellation_reason as a new table.
     :param db_name: name of the database to create or add a table to
+    :param table_name: name of the new table
+    :param query: the query to execute
     """
-    def __init__(self, db_name: str):
+    sqlite_conn = sqlite3.connect(db_name)
+    sqlite_cursor = sqlite_conn.cursor()
 
-        self.sqlite_conn = sqlite3.connect(db_name)
-        self.sqlite_cursor = self.sqlite_conn.cursor()
+    query_result = duckdb.execute(query)
 
-    def query(self, table_name: str, query: str):
-        """
-        Queries the database and saves the result as a new table
-        :param table_name: name of the new table
-        :param query: the query to execute
-        """
+    # key: column name, value: column dtype
+    query_result_columns_dtypes = dict(zip((col[0] for col in query_result.description),
+                                           (col[1] for col in query_result.description)))
 
-        query_result = duckdb.execute(query)
+    columns_str = ', '.join([f"{col_name} {col_dtype}"
+                             for col_name, col_dtype in query_result_columns_dtypes.items()])
 
-        # key: column name, value: column dtype
-        query_result_columns_dtypes = dict(zip((col[0] for col in query_result.description),
-                                               (col[1] for col in query_result.description)))
+    # delete table if exists
+    sqlite_cursor.execute(f'DROP TABLE IF EXISTS {table_name}')
 
-        columns_str = ', '.join([f"{col_name} {col_dtype}"
-                                 for col_name, col_dtype in query_result_columns_dtypes.items()])
+    # create new table with schema as the query airports_cancellation_reason
+    # each column will have the appropriate dtype
+    create_table_query = f"CREATE TABLE {table_name} ({columns_str})"
+    sqlite_cursor.execute(create_table_query)
 
-        # delete table if exists
-        self.sqlite_cursor.execute(f'DROP TABLE IF EXISTS {table_name}')
+    # add query airports_cancellation_reason's rows into new table,
+    insert_query = (f"INSERT INTO {table_name} "
+                    f"({', '.join(query_result_columns_dtypes.keys())}) VALUES "
+                    f"({', '.join(['?'] * len(query_result_columns_dtypes))})")
+    sqlite_cursor.executemany(insert_query, query_result.fetchall())
 
-        # create new table with schema as the query result
-        create_table_query = f"CREATE TABLE {table_name} ({columns_str})"
-        self.sqlite_cursor.execute(create_table_query)
-
-        # add query result's rows into new table
-        insert_query = (f"INSERT INTO {table_name} "
-                        f"({', '.join(query_result_columns_dtypes.keys())}) VALUES "
-                        f"({', '.join(['?'] * len(query_result_columns_dtypes))})")
-        self.sqlite_cursor.executemany(insert_query, query_result.fetchall())
-
-        # Commit and close
-        self.sqlite_conn.commit()
-        self.sqlite_cursor.close()
-        self.sqlite_conn.close()
+    # Commit and close
+    sqlite_conn.commit()
+    sqlite_cursor.close()
+    sqlite_conn.close()
