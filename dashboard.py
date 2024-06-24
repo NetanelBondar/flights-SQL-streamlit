@@ -11,7 +11,6 @@ from data_generator import DBsPaths
 FORMATTED_SPANS = ('00:00 - 03:59', '04:00 - 07:59', '08:00 - 11:59',
                    '12:00 - 15:59', '16:00 - 19:59', '20:00 - 23:59')
 
-# SPANS = ()
 SPANS = list(map(lambda x: x.split(' - '), FORMATTED_SPANS))
 SPANS = tuple([(start.replace(':', ''), finish.replace(':', '')) for start, finish in SPANS])
 
