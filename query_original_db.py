@@ -1,7 +1,7 @@
 
-from data_generator import execute_query, DBsPaths, DB_DIR_PATH
+from data_generator import execute_query, DBsPaths, DB_DIR_NAME
 
-DB_NAME = f'{DB_DIR_PATH}/original_sample.db'
+DB_NAME = 'original_sample.db'
 
 query_airports = f"""
 SELECT *
@@ -28,10 +28,10 @@ WHERE {row_not_null_query_flights}
 LIMIT 50
 """
 
-execute_query(DB_NAME, 'airports_sample', query_airports)
-execute_query(DB_NAME, 'airlines_sample', query_airlines)
-execute_query(DB_NAME, 'cancellation_codes_sample', query_cancellation_codes)
-execute_query(DB_NAME, 'flights_sample', query_flights)
+execute_query(f'{DB_DIR_NAME}/{DB_NAME}', 'airports_sample', query_airports)
+execute_query(f'{DB_DIR_NAME}/{DB_NAME}', 'airlines_sample', query_airlines)
+execute_query(f'{DB_DIR_NAME}/{DB_NAME}', 'cancellation_codes_sample', query_cancellation_codes)
+execute_query(f'{DB_DIR_NAME}/{DB_NAME}', 'flights_sample', query_flights)
 
 
 

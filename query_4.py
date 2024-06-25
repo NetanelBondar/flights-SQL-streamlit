@@ -1,6 +1,6 @@
-from data_generator import execute_query, DBsPaths, DB_DIR_PATH
+from data_generator import execute_query, DBsPaths, DB_DIR_NAME
 
-DB_NAME = f'{DB_DIR_PATH}/query_4_results.db'
+DB_NAME = 'query_4_results.db'
 
 MONTHS = dict(zip(
     range(1, 13),
@@ -19,4 +19,4 @@ for i, month in MONTHS.items():
     GROUP BY cancellation_codes.CANCELLATION_DESCRIPTION
     """
 
-    execute_query(DB_NAME, f'cancellation_reason_percentage_{month}', query)
+    execute_query(f'{DB_DIR_NAME}/{DB_NAME}', f'cancellation_reason_percentage_{month}', query)

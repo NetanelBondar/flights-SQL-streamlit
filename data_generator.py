@@ -3,7 +3,7 @@ import duckdb
 import sqlite3
 import os
 
-DB_DIR_PATH = '../Databases'
+DB_DIR_NAME = 'Databases'
 
 class DBsPaths:
     """
@@ -18,16 +18,19 @@ class DBsPaths:
 
 def execute_query(db_name: str, table_name: str, query: str):
     """
-    create a new db if it doesn't exist.\n
-    queries the database and saves the airports_cancellation_reason as a new table.
+    queries on the 4 csv databases in the `Airlines_Airports_Cancellation_Codes_Flights` folder.\n
+    create a new db if it doesn't exist and saves the `table_name` as a new table.\n
+    creates a folder, there all the db will be stored
     :param db_name: name of the database to create or add a table to
     :param table_name: name of the new table
     :param query: the query to execute
     """
 
-    if not os.path.exists(DB_DIR_PATH):
-        os.makedirs(DB_DIR_PATH)
+    # create a folder to store the result db of the query
+    if not os.path.exists(DB_DIR_NAME):
+        os.makedirs(DB_DIR_NAME)
 
+    # create a new db if doesn't exist
     sqlite_conn = sqlite3.connect(db_name)
     sqlite_cursor = sqlite_conn.cursor()
 
@@ -43,12 +46,12 @@ def execute_query(db_name: str, table_name: str, query: str):
     # delete table if exists
     sqlite_cursor.execute(f'DROP TABLE IF EXISTS {table_name}')
 
-    # create new table with schema as the query airports_cancellation_reason
+    # create new table with schema as the query result
     # each column will have the appropriate dtype
     create_table_query = f"CREATE TABLE {table_name} ({columns_str})"
     sqlite_cursor.execute(create_table_query)
 
-    # add query airports_cancellation_reason's rows into new table,
+    # add query result's rows into new table,
     insert_query = (f"INSERT INTO {table_name} "
                     f"({', '.join(query_result_columns_dtypes.keys())}) VALUES "
                     f"({', '.join(['?'] * len(query_result_columns_dtypes))})")

@@ -1,31 +1,32 @@
 import datetime
-import duckdb
 import seaborn
 import streamlit as st
 import pandas as pd
 import sqlite3
 import matplotlib.pyplot as plt
 
-from data_generator import DBsPaths
+from data_generator import DB_DIR_NAME
 
 FORMATTED_SPANS = ('00:00 - 03:59', '04:00 - 07:59', '08:00 - 11:59',
                    '12:00 - 15:59', '16:00 - 19:59', '20:00 - 23:59')
 
+# (('0000', '0359'), ('0400', '0759'), ...)
 SPANS = list(map(lambda x: x.split(' - '), FORMATTED_SPANS))
 SPANS = tuple([(start.replace(':', ''), finish.replace(':', '')) for start, finish in SPANS])
 
 MONTHS_SELECTION = ('', 'January', 'February', 'March', 'April', 'May', 'June',
                     'July', 'August', 'September', 'October', 'November', 'December')
 
-MOST_POPULAR_AIRPORTS = ('Los Angeles International Airport', 'San Francisco International Airport',
-                         'John F. Kennedy International Airport', "Chicago O'Hare International Airport",
-                         'McCarran International Airport', 'LaGuardia Airport (Marine Air Terminal)')
+MOST_POPULAR_CONNECTIONS = ('Los Angeles International Airport', 'San Francisco International Airport',
+                            'John F. Kennedy International Airport', "Chicago O'Hare International Airport",
+                            'McCarran International Airport', 'LaGuardia Airport (Marine Air Terminal)')
 
 SQLITE_ORIGINAL_CONN = sqlite3.connect('Databases/original_sample.db')
 SQLITE_1_CONN = sqlite3.connect('Databases/query_1_results.db')
 SQLITE_2_CONN = sqlite3.connect('Databases/query_2_results.db')
 SQLITE_3_CONN = sqlite3.connect('Databases/query_3_results.db')
 SQLITE_4_CONN = sqlite3.connect('Databases/query_4_results.db')
+
 
 def str_vals_to_int(str_vals):
     if isinstance(str_vals, int):
@@ -43,6 +44,19 @@ def clean_airline_str(airline_str):
 def clean_airport_str(airport_str):
     return airport_str.replace('Airport ', '').replace('Airport', '').strip()
 
+
+def get_all_airports():
+    """
+    :return: all airports in the database
+    """
+    sqlite_conn = sqlite3.connect(f'{DB_DIR_NAME}/all_airports.db')
+    sqlite_cursor = sqlite_conn.cursor()
+
+    sqlite_cursor.execute('SELECT * FROM all_airports_table')
+
+    result = tuple(item[0] for item in sqlite_cursor.fetchall())
+
+    return result
 
 def show_sample_original():
 
@@ -77,6 +91,9 @@ def show_graph_1():
 
     selected_option = st.radio('Choose a time to see how much the airlines are delayed:',
                                [''] + list(FORMATTED_SPANS), index=None)
+
+    st.text('We can see that some the most reliable airlines are: Delta and Hawaiian')
+    st.text('Some of the most unreliable airlines are: Spirit, Frontier and American Eagle')
 
     if selected_option is None or selected_option == '':
         return
@@ -144,13 +161,14 @@ def show_graph_2():
 
 
 def show_graph_3():
-    all_airports = list(zip(*duckdb.execute(f"SELECT AIRPORT FROM 'queries\{DBsPaths.AIRPORTS}'").fetchall()))[0]
 
-    st.title("How Does Departure Delay Affects Arrival Delay? Based on Origin & Destination Airports and Month")
+    all_airports = get_all_airports()
 
-    st.text(f'Most Popular Airports:\n' + '\n'.join(MOST_POPULAR_AIRPORTS))
+    st.title("How Does Departure Delay Affect Arrival Delay? Based on Origin & Destination Airports and Month")
 
-    airports_pair = st.multiselect('Choose 2 airports to see the top cancelled fights percentage airports',
+    st.text(f'Most Popular Airports Connections:\n' + '\n'.join(MOST_POPULAR_CONNECTIONS))
+
+    airports_pair = st.multiselect('Choose origin and destination airports',
                                    all_airports,
                                    max_selections=2)
 
@@ -202,6 +220,13 @@ WHERE origin = "{airports_pair[0]}" AND destination = "{airports_pair[1]}" AND
     plt.xlim(-5, 60)
     plt.ylim(-25, 60)
 
+    st.text("If the point is below the black line,\n"
+            "the departure delay didn't affect the arrival delay that much.")
+    st.text("If the point is above the black line,\n"
+            "the departure delay maybe was the reason for the arrival delay to be even worse.")
+    st.text("If the point is on the black line,\n"
+            "the arrival delay was the same as the departure delay.")
+
     st.pyplot(fig)
 
 
@@ -234,6 +259,9 @@ def show_graph_4():
 
     ax.axis('equal')
     ax.set_title("Cancellation Reason Percentage")
+
+    st.text("We can see that during the summer months the Weather doesn't effect cancellation"
+            "as much as the rest of the year.")
 
     st.pyplot(fig)
 

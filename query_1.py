@@ -1,11 +1,11 @@
 
-from data_generator import execute_query, DBsPaths, DB_DIR_PATH
+from data_generator import execute_query, DBsPaths, DB_DIR_NAME
 
 SPANS = (('0000', '0359'), ('0400', '0759'), ('0800', '1159'),
          ('1200', '1559'), ('1600', '1959'), ('2000', '2359'))
 
 
-DB_NAME = f'{DB_DIR_PATH}/query_1_results.db'
+DB_NAME = 'query_1_results.db'
 
 for span in SPANS:
 
@@ -20,6 +20,6 @@ for span in SPANS:
     ORDER BY airlines.AIRLINE
     """
 
-    execute_query(DB_NAME, f'bet_{span[0]}_to_{span[1]}', query)
+    execute_query(f'{DB_DIR_NAME}/{DB_NAME}', f'bet_{span[0]}_to_{span[1]}', query)
 
 
