@@ -1,4 +1,3 @@
-
 """
 To work properly,
 the folder `Databases` with the small dbs needs to be in the same directory
@@ -10,8 +9,6 @@ import streamlit as st
 import pandas as pd
 import sqlite3
 import matplotlib.pyplot as plt
-
-
 
 DB_DIR_NAME = 'Databases'
 
@@ -66,8 +63,8 @@ def get_all_airports():
 
     return result
 
-def show_sample_original():
 
+def show_sample_original():
     result_airlines = pd.read_sql_query(f'SELECT * FROM airlines_sample',
                                         SQLITE_ORIGINAL_CONN)
     result_airports = pd.read_sql_query(f'SELECT * FROM airports_sample',
@@ -169,7 +166,6 @@ def show_graph_2():
 
 
 def show_graph_3():
-
     all_airports = get_all_airports()
 
     st.title("How Does Departure Delay Affect Arrival Delay? Based on Origin & Destination Airports and Month")
@@ -177,19 +173,21 @@ def show_graph_3():
     st.text(f'Most Popular Airports Connections:\n' + '\n'.join(MOST_POPULAR_CONNECTIONS))
 
     origin = st.multiselect('Choose origin airport',
-                           all_airports,
-                           max_selections=1)
+                            all_airports,
+                            max_selections=1)
 
     destination = st.multiselect('Choose destination airport',
-                           all_airports,
-                           max_selections=1)
+                                 all_airports,
+                                 max_selections=1)
 
     d = st.date_input("What date is your flight",
                       min_value=datetime.date(2015, 1, 1),
                       max_value=datetime.date(2015, 12, 31),
                       value=None)
 
-    if origin is None or destination is None or d is None:
+    if (origin is None or len(origin) == 0 or
+            destination is None or len(destination) == 0 or
+            d is None):
         return
 
     origin = origin[0]
@@ -249,7 +247,6 @@ WHERE origin = "{origin}" AND destination = "{destination}" AND
 
 
 def show_graph_4():
-
     st.title("Percentage for each Cancellation Reason Based on Month")
 
     selected_month = st.radio('Choose month', MONTHS_SELECTION)
