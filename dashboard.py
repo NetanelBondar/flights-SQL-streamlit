@@ -29,7 +29,7 @@ MOST_POPULAR_CONNECTIONS = ('Los Angeles International Airport', 'San Francisco 
                             'John F. Kennedy International Airport', "Chicago O'Hare International Airport",
                             'McCarran International Airport', 'LaGuardia Airport (Marine Air Terminal)')
 
-SQLITE_ORIGINAL_CONN = sqlite3.connect('Databases/original_sample.db')
+SQLITE_ORIGINAL_CONN = sqlite3.connect('Databases/sample_original.db')
 SQLITE_1_CONN = sqlite3.connect('Databases/query_1_results.db')
 SQLITE_2_CONN = sqlite3.connect('Databases/query_2_results.db')
 SQLITE_3_CONN = sqlite3.connect('Databases/query_3_results.db')
