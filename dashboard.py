@@ -174,7 +174,8 @@ def show_graph_3():
 
     d = st.date_input("What date is your flight",
                       min_value=datetime.date(2015, 1, 1),
-                      max_value=datetime.date(2015, 12, 31))
+                      max_value=datetime.date(2015, 12, 31),
+                      value=None)
 
     if len(airports_pair) != 2 or airports_pair[0] is None or airports_pair[1] is None:
         return
