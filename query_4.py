@@ -1,3 +1,7 @@
+"""
+queries the big data to answer question 4
+"""
+
 from data_generator import execute_query, DBsPaths, DB_DIR_NAME
 
 DB_NAME = 'query_4_results.db'

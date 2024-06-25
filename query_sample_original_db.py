@@ -1,7 +1,9 @@
-
+"""
+queries the big data to get sample data out of each one.
+"""
 from data_generator import execute_query, DBsPaths, DB_DIR_NAME
 
-DB_NAME = 'original_sample.db'
+DB_NAME = 'sample_original.db'
 
 query_airports = f"""
 SELECT *

@@ -1,4 +1,8 @@
 
+"""
+queries the big data to answer question 1
+"""
+
 from data_generator import execute_query, DBsPaths, DB_DIR_NAME
 
 SPANS = (('0000', '0359'), ('0400', '0759'), ('0800', '1159'),

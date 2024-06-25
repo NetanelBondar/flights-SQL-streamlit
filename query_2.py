@@ -1,4 +1,8 @@
 
+"""
+queries the big data to answer question 2
+"""
+
 from data_generator import execute_query, DBsPaths, DB_DIR_NAME
 
 import duckdb
