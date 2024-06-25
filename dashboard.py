@@ -180,11 +180,13 @@ def show_graph_3():
     if len(airports_pair) != 2 or airports_pair[0] is None or airports_pair[1] is None:
         return
 
+    # info about departure and arrivale delay and schedueled departure
+    # for flights in the selectced date with max delay of 60 minutes
     query = f"""
 SELECT DEPARTURE_DELAY, ARRIVAL_DELAY, SCHEDULED_DEPARTURE
 FROM departure_vs_arrival_delay 
 WHERE origin = "{airports_pair[0]}" AND destination = "{airports_pair[1]}" AND 
-      DEPARTURE_DELAY BETWEEN 0 AND 120
+      DEPARTURE_DELAY BETWEEN 0 AND 60
       AND MONTH = {d.month} AND DAY = {d.day}
 """
 
