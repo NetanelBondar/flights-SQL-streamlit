@@ -5,7 +5,7 @@ import pandas as pd
 import sqlite3
 import matplotlib.pyplot as plt
 
-from data_generator import DB_DIR_NAME
+DB_DIR_NAME = 'Databases'
 
 FORMATTED_SPANS = ('00:00 - 03:59', '04:00 - 07:59', '08:00 - 11:59',
                    '12:00 - 15:59', '16:00 - 19:59', '20:00 - 23:59')
@@ -168,24 +168,31 @@ def show_graph_3():
 
     st.text(f'Most Popular Airports Connections:\n' + '\n'.join(MOST_POPULAR_CONNECTIONS))
 
-    airports_pair = st.multiselect('Choose origin and destination airports',
-                                   all_airports,
-                                   max_selections=2)
+    origin = st.multiselect('Choose origin airport',
+                           all_airports,
+                           max_selections=1)
+
+    destination = st.multiselect('Choose destination airport',
+                           all_airports,
+                           max_selections=1)
 
     d = st.date_input("What date is your flight",
                       min_value=datetime.date(2015, 1, 1),
                       max_value=datetime.date(2015, 12, 31),
                       value=None)
 
-    if len(airports_pair) != 2 or airports_pair[0] is None or airports_pair[1] is None:
+    if origin is None or destination is None or d is None:
         return
+
+    origin = origin[0]
+    destination = destination[0]
 
     # info about departure and arrivale delay and schedueled departure
     # for flights in the selectced date with max delay of 60 minutes
     query = f"""
 SELECT DEPARTURE_DELAY, ARRIVAL_DELAY, SCHEDULED_DEPARTURE
 FROM departure_vs_arrival_delay 
-WHERE origin = "{airports_pair[0]}" AND destination = "{airports_pair[1]}" AND 
+WHERE origin = "{origin}" AND destination = "{destination}" AND 
       DEPARTURE_DELAY BETWEEN 0 AND 60
       AND MONTH = {d.month} AND DAY = {d.day}
 """
