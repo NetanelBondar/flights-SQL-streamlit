@@ -1,9 +1,17 @@
+
+"""
+To work properly,
+the folder `Databases` with the small dbs needs to be in the same directory
+"""
+
 import datetime
 import seaborn
 import streamlit as st
 import pandas as pd
 import sqlite3
 import matplotlib.pyplot as plt
+
+
 
 DB_DIR_NAME = 'Databases'
 
