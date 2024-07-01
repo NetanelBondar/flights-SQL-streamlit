@@ -26,11 +26,13 @@ MOST_POPULAR_CONNECTIONS = ('Los Angeles International Airport', 'San Francisco 
                             'John F. Kennedy International Airport', "Chicago O'Hare International Airport",
                             'McCarran International Airport', 'LaGuardia Airport (Marine Air Terminal)')
 
-SQLITE_ORIGINAL_CONN = sqlite3.connect('Databases/sample_original.db')
-SQLITE_1_CONN = sqlite3.connect('Databases/query_1_results.db')
-SQLITE_2_CONN = sqlite3.connect('Databases/query_2_results.db')
-SQLITE_3_CONN = sqlite3.connect('Databases/query_3_results.db')
-SQLITE_4_CONN = sqlite3.connect('Databases/query_4_results.db')
+SQLITE_ORIGINAL_CONN = sqlite3.connect(f'{DB_DIR_NAME}/sample_original.db')
+SQLITE_1_CONN = sqlite3.connect(f'{DB_DIR_NAME}/query_1_results.db')
+SQLITE_2_CONN = sqlite3.connect(f'{DB_DIR_NAME}/query_2_results.db')
+SQLITE_3_CONN = sqlite3.connect(f'{DB_DIR_NAME}/query_3_results.db')
+SQLITE_4_CONN = sqlite3.connect(f'{DB_DIR_NAME}/query_4_results.db')
+
+SQLITE_SPARK_QUERY_CONN = sqlite3.connect(f'{DB_DIR_NAME}/flight_analysis.db')
 
 
 def str_vals_to_int(str_vals):
@@ -280,9 +282,27 @@ def show_graph_4():
 
     st.pyplot(fig)
 
+def show_spark_query_graph():
+    st.title("Average Distance for each Airline (Spark Query)")
+
+    result = pd.read_sql_query(f'SELECT * FROM "average_distance"', SQLITE_SPARK_QUERY_CONN)
+
+    airline, avg_distance = ([values[0] for values in result.values],
+                             [values[1] for values in result.values])
+
+    fig, ax = plt.subplots()
+
+    ax.bar(airline, avg_distance)
+
+    ax.set_title("Average Distance for each Airline")
+    ax.set_xlabel("Airline")
+    ax.set_ylabel("Average Distance (miles)")
+
+    st.pyplot(fig)
 
 show_sample_original()
 show_graph_1()
 show_graph_2()
 show_graph_3()
 show_graph_4()
+show_spark_query_graph()
