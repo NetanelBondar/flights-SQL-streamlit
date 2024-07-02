@@ -31,9 +31,12 @@ SQLITE_1_CONN = sqlite3.connect(f'{DB_DIR_NAME}/query_1_results.db')
 SQLITE_2_CONN = sqlite3.connect(f'{DB_DIR_NAME}/query_2_results.db')
 SQLITE_3_CONN = sqlite3.connect(f'{DB_DIR_NAME}/query_3_results.db')
 SQLITE_4_CONN = sqlite3.connect(f'{DB_DIR_NAME}/query_4_results.db')
+SQLITE_5_CONN = sqlite3.connect(f'{DB_DIR_NAME}/query_5_results.db')
+SQLITE_6_CONN = sqlite3.connect(f'{DB_DIR_NAME}/query_6_results.db')
 
 SQLITE_SPARK_QUERY_CONN = sqlite3.connect(f'{DB_DIR_NAME}/flight_analysis.db')
 
+#--------------------------------------------------------------------------------------------------------------------
 
 def str_vals_to_int(str_vals):
     if isinstance(str_vals, int):
@@ -41,6 +44,7 @@ def str_vals_to_int(str_vals):
 
     return list(map(int, str_vals.split(',')))
 
+#--------------------------------------------------------------------------------------------------------------------
 
 def clean_airline_str(airline_str):
     return (airline_str.replace('Airlines', '').
@@ -51,6 +55,7 @@ def clean_airline_str(airline_str):
 def clean_airport_str(airport_str):
     return airport_str.replace('Airport ', '').replace('Airport', '').strip()
 
+#--------------------------------------------------------------------------------------------------------------------
 
 def get_all_airports():
     """
@@ -65,6 +70,7 @@ def get_all_airports():
 
     return result
 
+#--------------------------------------------------------------------------------------------------------------------
 
 def show_sample_original():
     result_airlines = pd.read_sql_query(f'SELECT * FROM airlines_sample',
@@ -92,6 +98,7 @@ def show_sample_original():
                                 subset=['MONTH', 'DAY', 'SCHEDULED_DEPARTURE',
                                         'DEPARTURE_DELAY', 'ARRIVAL_DELAY', 'CANCELLATION_REASON']))
 
+#--------------------------------------------------------------------------------------------------------------------
 
 def show_graph_1():
     st.title("Delays Relative to Airlines and Time of the Day")
@@ -134,6 +141,7 @@ def show_graph_1():
 
     st.pyplot(fig)
 
+#--------------------------------------------------------------------------------------------------------------------
 
 def show_graph_2():
     st.title('Top 10 Cancelled Flights Percentage Airports Based on Month')
@@ -166,6 +174,7 @@ def show_graph_2():
 
         st.pyplot(fig)
 
+#--------------------------------------------------------------------------------------------------------------------
 
 def show_graph_3():
     all_airports = get_all_airports()
@@ -247,7 +256,7 @@ WHERE origin = "{origin}" AND destination = "{destination}" AND
 
     st.pyplot(fig)
 
-
+#--------------------------------------------------------------------------------------------------------------------
 def show_graph_4():
     st.title("Percentage for each Cancellation Reason Based on Month")
 
@@ -282,6 +291,47 @@ def show_graph_4():
 
     st.pyplot(fig)
 
+#--------------------------------------------------------------------------------------------------------------------
+
+def show_graph_5():
+    st.title("Summed distance by day of the week")
+
+    result = pd.read_sql_query(f'SELECT * FROM DistanceByDayWeek', SQLITE_5_CONN)
+
+    day_of_week, distance_sum = ([values[0] for values in result.values],
+                                      [values[1] for values in result.values])
+
+    fig, ax = plt.subplots()
+    ax.bar(day_of_week, distance_sum)
+    ax.set_title("Summed distance by day of the week")
+
+    st.text("We can see that during the summer months the Weather doesn't effect cancellation"
+            "as much as the rest of the year.")
+    plt.show()
+    st.pyplot(fig)
+
+#--------------------------------------------------------------------------------------------------------------------
+
+
+def show_graph_6():
+    st.title("Taxi quantity by hour per airports")
+
+    result = pd.read_sql_query(f'SELECT * FROM QuantityTaxiHourAirport', SQLITE_6_CONN)
+
+    airport_dep, taxi_sum = ([values[0] for values in result.values],
+                                      [values[1] for values in result.values])
+
+    fig, ax = plt.subplots()
+    ax.bar(airport_dep, taxi_sum)
+    ax.set_title("Taxi quantity by hour per airports")
+
+    st.text("We can see that during the summer months the Weather doesn't effect cancellation"
+            "as much as the rest of the year.")
+    plt.show()
+    st.pyplot(fig)
+
+#--------------------------------------------------------------------------------------------------------------------
+
 def show_spark_query_graph():
     st.title("Average Distance for each Airline (Spark Query)")
 
@@ -300,9 +350,13 @@ def show_spark_query_graph():
 
     st.pyplot(fig)
 
-show_sample_original()
-show_graph_1()
-show_graph_2()
-show_graph_3()
-show_graph_4()
-show_spark_query_graph()
+#--------------------------------------------------------------------------------------------------------------------
+
+#show_sample_original()
+#show_graph_1()
+#show_graph_2()
+#show_graph_3()
+#show_graph_4()
+#show_graph_5()
+show_graph_6()
+#show_spark_query_graph()
