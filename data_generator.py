@@ -1,4 +1,10 @@
 
+"""
+to use it, the python file must be in the same directory as the
+`Airlines_Airports_Cancellation_Codes_Flights` folder, in which the 4 csv files
+are located (the big data).
+"""
+
 import duckdb
 import sqlite3
 import os
@@ -8,8 +14,6 @@ DB_DIR_NAME = 'Databases'
 class DBsPaths:
     """
     paths to the 4 databases.
-    assumes the `Airlines_Airports_Cancellation_Codes_Flights` folder exists
-    in the same directory
     """
     AIRLINES = 'Airlines_Airports_Cancellation_Codes_Flights/airlines.csv'
     AIRPORTS = 'Airlines_Airports_Cancellation_Codes_Flights/airports.csv'
