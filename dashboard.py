@@ -38,9 +38,10 @@ SQLITE_6_CONN = sqlite3.connect(f'{DB_DIR_NAME}/query_6_results.db')
 
 SQLITE_SPARK_QUERY_CONN = sqlite3.connect(f'{DB_DIR_NAME}/flight_analysis.db')
 
+
 #--------------------------------------------------------------------------------------------------------------------
 
-def str_vals_to_int(str_vals: str) -> int | list[int]:
+def str_vals_to_int(str_vals: str):
     """
     converts string values seperated by comma to list of integers
     :param str_vals: string values seperated by comma
@@ -53,7 +54,6 @@ def str_vals_to_int(str_vals: str) -> int | list[int]:
     return list(map(int, str_vals.split(',')))
 
 #--------------------------------------------------------------------------------------------------------------------
-
 def clean_airline_str(airline_str: str) -> str:
     """
     removes unnecessary repeated words from airline names like 'Airline' etc.
@@ -62,7 +62,7 @@ def clean_airline_str(airline_str: str) -> str:
     """
     return (airline_str.replace('Airlines', '').
             replace('Inc.', '').replace('Air', '').
-            replace('Lines', '').strip())
+            replace('Lines', '').replace('Co.', '').strip())
 
 
 def clean_airport_str(airport_str: str) -> str:
@@ -72,6 +72,7 @@ def clean_airport_str(airport_str: str) -> str:
     :return: the same name without the unnecessary repeated words
     """
     return airport_str.replace('Airport ', '').replace('Airport', '').strip()
+
 
 #--------------------------------------------------------------------------------------------------------------------
 
@@ -85,6 +86,7 @@ def get_all_airports() -> tuple[str]:
     result_better = tuple([value[0] for value in result_better.values])
 
     return result_better
+
 
 #--------------------------------------------------------------------------------------------------------------------
 
@@ -120,7 +122,9 @@ def show_sample_original():
                  set_properties(**{'background-color': '#BA494B'},
                                 subset=['MONTH', 'DAY', 'SCHEDULED_DEPARTURE',
                                         'DEPARTURE_DELAY', 'ARRIVAL_DELAY',
-                                        'CANCELLATION_REASON', 'DISTANCE']))
+                                        'CANCELLATION_REASON', 'DISTANCE',
+                                        'AIR_TIME']))
+
 
 #--------------------------------------------------------------------------------------------------------------------
 
@@ -172,6 +176,7 @@ def show_graph_1():
 
     st.pyplot(fig)
 
+
 #--------------------------------------------------------------------------------------------------------------------
 
 def show_graph_2():
@@ -209,6 +214,7 @@ def show_graph_2():
         ax.legend(airports, title="Airports", bbox_to_anchor=(1, 0.5))
 
         st.pyplot(fig)
+
 
 #--------------------------------------------------------------------------------------------------------------------
 
@@ -298,6 +304,7 @@ WHERE origin = "{origin}" AND destination = "{destination}" AND
 
     st.pyplot(fig)
 
+
 #--------------------------------------------------------------------------------------------------------------------
 def show_graph_4():
     """
@@ -343,75 +350,83 @@ def show_graph_4():
 def show_graph_5():
     st.title("Summed distance by day of the week")
 
-    result = pd.read_sql_query(f'SELECT * FROM DistanceByDayWeek', SQLITE_5_CONN)
+    result = pd.read_sql_query(f'SELECT * FROM distance_by_week_day', SQLITE_5_CONN)
 
     day_of_week, distance_sum = ([values[0] for values in result.values],
-                                      [values[1] for values in result.values])
+                                 [values[1] for values in result.values])
 
     fig, ax = plt.subplots()
     ax.bar(day_of_week, distance_sum)
     ax.set_title("Summed distance by day of the week")
+    ax.set_xlabel("Day of the Week")
+    ax.set_ylabel("Distance (miles)")
 
-    st.text("We can see that during the summer months the Weather doesn't effect cancellation"
-            "as much as the rest of the year.")
-    plt.show()
+    st.text("We can see that in Wednesday the flights cover the most distance\n"
+            "and in friday the least.")
+    plt.tight_layout()
     st.pyplot(fig)
 
-
 #--------------------------------------------------------------------------------------------------------------------
-
-
 def show_graph_6():
-    st.title("Taxi quantity by hour per airports")
+    st.title("Entire airtime for each airline through the year 2015")
 
-    result = pd.read_sql_query(f'SELECT * FROM QuantityTaxiHourAirport', SQLITE_6_CONN)
+    result = pd.read_sql_query(f'SELECT * FROM sum_airtime_airlines', SQLITE_6_CONN)
 
-    airport_dep, taxi_sum = ([values[0] for values in result.values],
-                                      [values[1] for values in result.values])
-
-    fig, ax = plt.subplots()
-    ax.bar(airport_dep, taxi_sum)
-    ax.set_title("Taxi quantity by hour per airports")
-
-    st.text("We can see that during the summer months the Weather doesn't effect cancellation"
-            "as much as the rest of the year.")
-    plt.show()
-    st.pyplot(fig)
-
-#--------------------------------------------------------------------------------------------------------------------
-
-def show_spark_query_graph():
-    st.title("Average Distance for each Airline (Spark Query)")
-
-    result = pd.read_sql_query(f'SELECT * FROM "average_distance"', SQLITE_SPARK_QUERY_CONN)
-
-    airline, avg_distance = ([values[0] for values in result.values],
+    airlines, airtime_sum = ([values[0] for values in result.values],
                              [values[1] for values in result.values])
 
+    airlines = list(map(lambda x: clean_airline_str(x), airlines))
+
     fig, ax = plt.subplots()
+    ax.bar(airlines, airtime_sum)
+    ax.set_title("Sum Airtime Across the Year for Each Airline")
 
-    ax.bar(airline, avg_distance)
-
-    ax.set_title("Average Distance for each Airline")
     ax.set_xlabel("Airline")
-    ax.set_ylabel("Average Distance (miles)")
+    ax.set_ylabel("Air Time (m)")
 
+    positions = range(0, len(airlines))
+    ax.set_xticks(ticks=positions, labels=airlines, rotation=25, ha='right')
+
+    plt.tight_layout()
+    st.text("We can see that Skywest's planes flew the least amount of time while\n"
+            "JetBlue ways' planes flew the most amount of time.")
     st.pyplot(fig)
-
+#--------------------------------------------------------------------------------------------------------------------
 def show_sample_json():
     st.title("Sample JSON of the fake data")
+    file_name = 'sample_json.json'
 
-    with open('sample_json.json', 'r') as f:
+    with open(file_name, 'r') as f:
         data = json.load(f)
 
     for entry in data:
         st.text(entry)
 #--------------------------------------------------------------------------------------------------------------------
+def show_spark_query_graph():
+    st.title("First letter count of origin airports")
 
+    result = pd.read_sql_query(f'SELECT * FROM "origin_airport_count"', SQLITE_SPARK_QUERY_CONN)
+
+    letter, count = ([values[0] for values in result.values],
+                     [values[1] for values in result.values])
+
+    fig, ax = plt.subplots()
+
+    ax.bar(letter, count)
+
+    ax.set_title("Letter count for each first letter of an origin airport")
+    ax.set_xlabel("Origin Airport")
+    ax.set_ylabel("Count")
+
+    st.text("We can see that the letters D, M and S are dominating the letter count")
+    st.pyplot(fig)
+#--------------------------------------------------------------------------------------------------------------------
 show_sample_original()
 show_graph_1()
 show_graph_2()
 show_graph_3()
 show_graph_4()
+show_graph_5()
+show_graph_6()
 show_spark_query_graph()
 show_sample_json()
