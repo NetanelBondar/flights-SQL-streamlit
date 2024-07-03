@@ -398,13 +398,20 @@ def show_spark_query_graph():
 
     st.pyplot(fig)
 
+def show_sample_json():
+    st.title("Sample JSON of the fake data")
+
+    with open('sample_json.json', 'r') as f:
+        data = json.load(f)
+
+    for entry in data:
+        st.text(entry)
 #--------------------------------------------------------------------------------------------------------------------
 
-#show_sample_original()
-#show_graph_1()
-#show_graph_2()
-#show_graph_3()
-#show_graph_4()
-#show_graph_5()
-show_graph_6()
-#show_spark_query_graph()
+show_sample_original()
+show_graph_1()
+show_graph_2()
+show_graph_3()
+show_graph_4()
+show_spark_query_graph()
+show_sample_json()
