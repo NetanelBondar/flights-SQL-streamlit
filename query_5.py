@@ -13,4 +13,4 @@ FROM '{DBsPaths.FLIGHTS}' AS flights
 GROUP BY flights.DAY_OF_WEEK
 """
 
-execute_query(f'{DB_DIR_NAME}/{DB_NAME}', f'DistanceByDayWeek', query)
+execute_query(f'{DB_DIR_NAME}/{DB_NAME}', f'distance_by_week_day', query)
