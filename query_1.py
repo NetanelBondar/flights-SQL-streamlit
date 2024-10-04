@@ -1,4 +1,7 @@
 
+"""
+generate the data for the first graph in the streamlit page
+"""
 
 from data_generator import execute_query, DBsPaths, DB_DIR_NAME
 

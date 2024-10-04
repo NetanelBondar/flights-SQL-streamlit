@@ -39,7 +39,18 @@ def execute_query(db_name: str, table_name: str, query: str):
     sqlite_conn = sqlite3.connect(db_name)
     sqlite_cursor = sqlite_conn.cursor()
 
-    query_result = duckdb.execute(query)
+    try:
+        query_result = duckdb.execute(query)
+    except duckdb.IOException as e:
+        # Include the original error message for more context
+        raise duckdb.IOException('\nThe folder `Airlines_Airports_Cancellation_Codes_Flights` '
+                                 'with the 4 csv files:\n'
+                                 '  - flights.csv\n'
+                                 '  - airports.csv\n'
+                                 '  - cancellation_codes.csv\n'
+                                 '  - airlines.csv\n'
+                                 'is not in the same directory.\n'
+                                 f'Original error: {str(e)}\n')
 
     # key: column name, value: column dtype
     query_result_columns_dtypes = dict(zip((col[0] for col in query_result.description),

@@ -1,6 +1,8 @@
+
 """
-queries the big data to get sample data out of each one.
+generate the data for sample data from each csv file
 """
+
 from data_generator import execute_query, DBsPaths, DB_DIR_NAME
 
 DB_NAME = 'sample_original.db'
