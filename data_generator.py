@@ -2,8 +2,7 @@
 """
 holds the original DBs paths and function to execute a query on them.
 to use it, the python file must be in the same directory as the
-`Airlines_Airports_Cancellation_Codes_Flights` folder, in which the 4 csv files
-are located (the big data).
+extracted folder, in which the 4 csv files are located (the big data).
 """
 
 import duckdb
@@ -11,25 +10,41 @@ import sqlite3
 import os
 
 DB_DIR_NAME = 'Databases'
+BIG_DATA_NEW_DIR_NAME = 'Airlines_Airports_Cancellation_Codes_Flights'
+BIG_DATA_ORIGINAL_DIR_NAME = 'Airlines+Airports+Cancellation+Codes+&+Flights'
 
 class DBsPaths:
     """
-    paths to the 4 databases.
+    paths to the 4 original databases.
     """
-    AIRLINES = 'Airlines_Airports_Cancellation_Codes_Flights/airlines.csv'
-    AIRPORTS = 'Airlines_Airports_Cancellation_Codes_Flights/airports.csv'
-    CANCELLATION_CODES = 'Airlines_Airports_Cancellation_Codes_Flights/cancellation_codes.csv'
-    FLIGHTS = 'Airlines_Airports_Cancellation_Codes_Flights/flights.csv'
+    AIRLINES = f'{BIG_DATA_NEW_DIR_NAME}/airlines.csv'
+    AIRPORTS = f'{BIG_DATA_NEW_DIR_NAME}/airports.csv'
+    CANCELLATION_CODES = f'{BIG_DATA_NEW_DIR_NAME}/cancellation_codes.csv'
+    FLIGHTS = f'{BIG_DATA_NEW_DIR_NAME}/flights.csv'
 
 def execute_query(db_name: str, table_name: str, query: str):
     """
-    queries on the 4 csv databases in the `Airlines_Airports_Cancellation_Codes_Flights` folder.\n
-    create a new db if it doesn't exist and saves the `table_name` as a new table.\n
-    creates a `Databases` folder if it doesn't exist, there all the db will be stored.
+    queries on the 4 csv databases in the original data folder.\n
+    creates a `Databases` folder if it doesn't exist, there all the db will be stored.\n
+    create a new db if it doesn't exist and add the `table_name` to the db.\n
     :param db_name: name of the database to create or add a table to
-    :param table_name: name of the new table
-    :param query: the query to execute
+    :param table_name: name of the new table to add to the db
+    :param query: the query to execute on the original data
     """
+
+    # check if the big data folder is not present
+    if not os.path.exists(BIG_DATA_NEW_DIR_NAME):
+        # if the big data folder is with the original name, rename it
+        if os.path.exists(BIG_DATA_ORIGINAL_DIR_NAME):
+            os.rename(BIG_DATA_ORIGINAL_DIR_NAME, BIG_DATA_NEW_DIR_NAME)
+        else:
+            raise duckdb.IOException(f'\nThe folder `{BIG_DATA_NEW_DIR_NAME}`'
+                                     'with the 4 csv files:\n'
+                                     '  - flights.csv\n'
+                                     '  - airports.csv\n'
+                                     '  - cancellation_codes.csv\n'
+                                     '  - airlines.csv\n'
+                                     'is not in the same directory.\n')
 
     # create a folder to store the result db of the query
     if not os.path.exists(DB_DIR_NAME):
@@ -39,18 +54,7 @@ def execute_query(db_name: str, table_name: str, query: str):
     sqlite_conn = sqlite3.connect(db_name)
     sqlite_cursor = sqlite_conn.cursor()
 
-    try:
-        query_result = duckdb.execute(query)
-    except duckdb.IOException as e:
-        # Include the original error message for more context
-        raise duckdb.IOException('\nThe folder `Airlines_Airports_Cancellation_Codes_Flights` '
-                                 'with the 4 csv files:\n'
-                                 '  - flights.csv\n'
-                                 '  - airports.csv\n'
-                                 '  - cancellation_codes.csv\n'
-                                 '  - airlines.csv\n'
-                                 'is not in the same directory.\n'
-                                 f'Original error: {str(e)}\n')
+    query_result = duckdb.execute(query)
 
     # key: column name, value: column dtype
     query_result_columns_dtypes = dict(zip((col[0] for col in query_result.description),

@@ -96,7 +96,7 @@ def show_sample_original():
     result_flights = pd.read_sql_query(f'SELECT * FROM flights_sample',
                                        SQLITE_ORIGINAL_CONN)
 
-    st.title('Original Data (columns we processed are marked)')
+    st.title('Original Data Sample (columns we processed are marked)')
     st.text('Airlines Table')
     st.dataframe(result_airlines.style.
                  set_properties(**{'background-color': '#BA494B'},
@@ -125,7 +125,8 @@ def show_graph_1():
     shows a box plot of departure delays for each
     airline in that period of day.
     """
-    st.title("Delays Relative to Airlines and Time of the Day")
+
+    st.title("Graph 1: Delays Relative to Airlines and Time of the Day")
 
     selected_option = st.radio('Choose a time to see how much the airlines are delayed:',
                                [''] + list(FORMATTED_DAY_PERIODS), index=None)
@@ -175,7 +176,7 @@ def show_graph_2():
     shows a pie chart of the top 10 cancellation flight airports for
     each month selected.
     """
-    st.title('Top 10 Cancelled Flights Percentage Airports Based on Month')
+    st.title('Graph 2: Top 10 Cancelled Flights Percentage Airports Based on Month')
 
     months_selected = st.multiselect('Choose month(s) to see the '
                                      'top cancelled fights percentage airports',
@@ -218,7 +219,7 @@ def show_graph_3():
     """
     all_airports = get_all_airports()
 
-    st.title("How Does Departure Delay Affect Arrival Delay? "
+    st.title("Graph 3: How Does Departure Delay Affect Arrival Delay? "
              "Based on Origin & Destination Airports and Month")
 
     st.text(f'Most Popular Airports Connections:\n' + '\n'.join(MOST_POPULAR_CONNECTIONS))
@@ -304,7 +305,7 @@ def show_graph_4():
     asks for a month.\n
     shows a pie chart of percentages of cancellation reasons for each month.
     """
-    st.title("Percentage for each Cancellation Reason Based on Month")
+    st.title("Graph 4: Percentage for each Cancellation Reason Based on Month")
 
     selected_month = st.radio('Choose month', MONTHS_SELECTION)
 
@@ -343,7 +344,7 @@ def show_graph_5():
     shows the fifth graph in the streamlit page.\n
     shows the summed distance of all flights per day.
     """
-    st.title("Summed distance by day of the week")
+    st.title("Graph 5: Summed distance by day of the week")
 
     result = pd.read_sql_query(f'SELECT * FROM distance_by_week_day', SQLITE_5_CONN)
 
@@ -366,7 +367,7 @@ def show_graph_6():
     shows the sixth graph in the streamlit page.\n
     shows the summed airtime for each airline.
     """
-    st.title("Summed airtime for each airline through the year 2015")
+    st.title("Graph 6: Summed airtime for each airline through the year 2015")
 
     result = pd.read_sql_query(f'SELECT * FROM sum_airtime_airlines', SQLITE_6_CONN)
 
