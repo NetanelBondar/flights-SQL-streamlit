@@ -1,5 +1,6 @@
 
 """
+holds the original DBs paths and function to execute a query on them.
 to use it, the python file must be in the same directory as the
 `Airlines_Airports_Cancellation_Codes_Flights` folder, in which the 4 csv files
 are located (the big data).
@@ -24,7 +25,7 @@ def execute_query(db_name: str, table_name: str, query: str):
     """
     queries on the 4 csv databases in the `Airlines_Airports_Cancellation_Codes_Flights` folder.\n
     create a new db if it doesn't exist and saves the `table_name` as a new table.\n
-    creates a folder, there all the db will be stored
+    creates a `Databases` folder if it doesn't exist, there all the db will be stored.
     :param db_name: name of the database to create or add a table to
     :param table_name: name of the new table
     :param query: the query to execute
@@ -34,7 +35,7 @@ def execute_query(db_name: str, table_name: str, query: str):
     if not os.path.exists(DB_DIR_NAME):
         os.makedirs(DB_DIR_NAME)
 
-    # create a new db if doesn't exist
+    # create a new db if it doesn't exist
     sqlite_conn = sqlite3.connect(db_name)
     sqlite_cursor = sqlite_conn.cursor()
 
@@ -50,7 +51,7 @@ def execute_query(db_name: str, table_name: str, query: str):
     # delete table if exists
     sqlite_cursor.execute(f'DROP TABLE IF EXISTS {table_name}')
 
-    # create new table with schema as the query result
+    # create a new table with schema as the query result
     # each column will have the appropriate dtype
     create_table_query = f"CREATE TABLE {table_name} ({columns_str})"
     sqlite_cursor.execute(create_table_query)

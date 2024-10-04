@@ -1,6 +1,4 @@
-"""
-queries the big data to answer question 6
-"""
+
 
 from data_generator import execute_query, DBsPaths, DB_DIR_NAME
 
@@ -11,7 +9,7 @@ SPANS = (('0000', '0359'), ('0400', '0759'), ('0800', '1159'),
 DB_NAME = 'query_6_results.db'
 
 query = f"""
-SELECT airlines.AIRLINE, SUM(flights.AIR_TIME) AS SUM_AIRTIME
+SELECT airlines.AIRLINE, SUM(flights.AIR_TIME) / 60 AS SUM_AIRTIME
 FROM '{DBsPaths.FLIGHTS}' AS flights
 JOIN '{DBsPaths.AIRLINES}' AS airlines
     ON flights.AIRLINE = airlines.IATA_CODE
