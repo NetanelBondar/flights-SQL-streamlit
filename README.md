@@ -7,9 +7,13 @@ The project aims to enhance the decision-making process for travelers looking to
 This project utilizes a large dataset containing approximately **5.8 million rows** of internal flights in the U.S. from **2015**. The dataset comprises four CSV files:
 
 - **Flights**: Contains scheduled and actual times of departure, dates, airlines, cancellation reason codes, etc.
+  ![Comparing Airlines by Departure Delay](dashboard_images/flights_table_sample.png)
 - **Airlines**: Includes full names and abbreviations of airlines.
+  ![Comparing Airlines by Departure Delay](dashboard_images/airlines_table_sample.png)
 - **Airports**: Contains airport names and their locations.
-- **Cancellation Reasons**: Provides cancellation codes and their full descriptions.
+  ![Comparing Airlines by Departure Delay](dashboard_images/airports_table_sample.png)
+- **Cancellation Codes**: Provides cancellation codes and their full descriptions.
+  ![Comparing Airlines by Departure Delay](dashboard_images/cancellation_codes_table.png)
 
 ## Technology Stack
 
@@ -23,27 +27,28 @@ The Streamlit dashboard includes **4 interactive graphs** that answer the follow
 
 1. **Comparing Airlines by Departure Delay (interactive)**:  
    Users can choose the time of day to see which airline has the least departure delays during that time. (whisker plot)
-   ![Comparing Airlines by Departure Delay](images/comparing_airlines.png)
+   ![Comparing Airlines by Departure Delay](dashboard_images/comparing_airlines.png)
    
 2. **Top 10 Cancelled Flights Percentage Airports (interactive)**:  
    Users can select month(s) to generate a separate pie chart for each month showing the airports with the highest percentages of cancelled flights.
-   ![Top 10 Cancelled Flights Percentage Airports](images/top_cancelled_airports.png)
+   ![Top 10 Cancelled Flights Percentage Airports](dashboard_images/top_cancelled_airports.png)
 
 4. **Relationship Between Departure and Arrival Delay (interactive)**:  
    Users can choose the origin and destination airports along with a month to see a scatter plot showing how departure delays affect arrival delays, colored by time of day.
-   ![Relationship Between Departure and Arrival Delay](images/departure_arrival_delay.png)
+   ![Relationship Between Departure and Arrival Delay](dashboard_images/departure_arrival_delay.png)
 
 5. **Percentage for Each Cancellation Reason (interactive)**:  
    Users can select a month to see a pie chart illustrating the percentage of cancellations attributed to different reasons.
-   ![Percentage for Each Cancellation Reason](images/cancellation_reason.png)
+   ![Percentage for Each Cancellation Reason](dashboard_images/cancellation_reason_february.png)
+   ![Percentage for Each Cancellation Reason](dashboard_images/cancellation_reason_july.png)
    
-6. **Daily Flight Distance**:  
+7. **Daily Flight Distance**:  
    A bar chart that displays the total distance covered by flights each day.
-   ![Daily Flight Distance](images/daily_flight_distance.png)
+   ![Daily Flight Distance](dashboard_images/daily_flight_distance.png)
    
-7. **Comparing Airlines by Flight Time**:  
+8. **Comparing Airlines by Flight Time**:  
    A bar chart that compares airlines based on average flight times.
-   ![Comparing Airlines by Flight Time](images/airlines_flight_time.png)
+   ![Comparing Airlines by Flight Time](dashboard_images/airlines_flight_time.png)
 
 ## Installation and Usage
 
