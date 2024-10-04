@@ -105,7 +105,7 @@ def show_sample_original():
     st.dataframe(result_airports.style.
                  set_properties(**{'background-color': '#BA494B'},
                                 subset=['AIRPORT']))
-    st.text('Cancellation Description Table')
+    st.text('Cancellation Codes Table')
     st.dataframe(result_cancellation_codes.style.
                  set_properties(**{'background-color': '#BA494B'},
                                 subset=['CANCELLATION_REASON',
