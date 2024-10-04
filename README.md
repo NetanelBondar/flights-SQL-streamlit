@@ -23,21 +23,27 @@ The Streamlit dashboard includes **4 interactive graphs** that answer the follow
 
 1. **Comparing Airlines by Departure Delay (interactive)**:  
    Users can choose the time of day to see which airline has the least departure delays during that time. (whisker plot)
+   ![Comparing Airlines by Departure Delay](images/comparing_airlines.png)
    
 2. **Top 10 Cancelled Flights Percentage Airports (interactive)**:  
    Users can select month(s) to generate a separate pie chart for each month showing the airports with the highest percentages of cancelled flights.
-   
-3. **Relationship Between Departure and Arrival Delay (interactive)**:  
+   ![Top 10 Cancelled Flights Percentage Airports](images/top_cancelled_airports.png)
+
+4. **Relationship Between Departure and Arrival Delay (interactive)**:  
    Users can choose the origin and destination airports along with a month to see a scatter plot showing how departure delays affect arrival delays, colored by time of day.
-   
-4. **Percentage for Each Cancellation Reason (interactive)**:  
+   ![Relationship Between Departure and Arrival Delay](images/departure_arrival_delay.png)
+
+5. **Percentage for Each Cancellation Reason (interactive)**:  
    Users can select a month to see a pie chart illustrating the percentage of cancellations attributed to different reasons.
+   ![Percentage for Each Cancellation Reason](images/cancellation_reason.png)
    
-5. **Daily Flight Distance**:  
+6. **Daily Flight Distance**:  
    A bar chart that displays the total distance covered by flights each day.
+   ![Daily Flight Distance](images/daily_flight_distance.png)
    
-6. **Comparing Airlines by Flight Time**:  
+7. **Comparing Airlines by Flight Time**:  
    A bar chart that compares airlines based on average flight times.
+   ![Comparing Airlines by Flight Time](images/airlines_flight_time.png)
 
 ## Installation and Usage
 
