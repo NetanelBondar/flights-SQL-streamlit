@@ -334,7 +334,7 @@ def show_graph_4():
     ax.axis('equal')
     ax.set_title("Cancellation Reason Percentage")
 
-    st.text("We can see that during the summer months the Weather doesn't effect cancellation"
+    st.text("We can see that during the summer months the weather\ndoesn't effect cancellation"
             "as much as the rest of the year.")
 
     st.pyplot(fig)
