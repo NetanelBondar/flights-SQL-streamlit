@@ -38,7 +38,7 @@ The Streamlit dashboard includes **4 interactive graphs** that answer the follow
    ![Relationship Between Departure and Arrival Delay](dashboard_images/departure_arrival_delay.png)
 
 5. **Percentage for Each Cancellation Reason (interactive)**:  
-   Users can select a month to see a pie chart illustrating the percentage of cancellations attributed to different reasons.
+   Users can select a month to see a pie chart illustrating the percentage of cancellations attributed to different reasons.<br>
    ![Percentage for Each Cancellation Reason](dashboard_images/cancellation_reason_february.png)
    ![Percentage for Each Cancellation Reason](dashboard_images/cancellation_reason_july.png)
    
